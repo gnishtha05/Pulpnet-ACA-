@@ -10,7 +10,7 @@ from sentence_transformers import SentenceTransformer
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("./final_project/iitk_cleaned_data.csv")
-    nltk.download('punkt_tab')
+    df = df[0:1]
     
     df = df.dropna(subset=["description"])  
     df.reset_index(drop=True, inplace=True)
@@ -53,7 +53,7 @@ embedder, index = initialize_resources(all_chunks)
 
 def get_top_chunks(question):
     question_embedding = embedder.encode([question])
-    D, I = index.search(np.array(question_embedding), k=3 )
+    D, I = index.search(np.array(question_embedding), k=1)
     best_idx = I[0][0]
     start_idx = max(best_idx - 2, 0)
     end_idx = min(best_idx + 3, len(all_chunks))
@@ -64,11 +64,13 @@ def get_top_chunks(question):
 
 def answer_question(question):
     context_chunks = get_top_chunks(question)
-    answers = []
-    for context in context_chunks:
-        result = model(question=question, context=context)
-        answers.append(result)
-    return answers
+    # answers = []
+    # for context in context_chunks:
+    #     result = model(question=question, context=context)
+    #     answers.append(result)
+    # return answers
+    result = model(question=question, context=context_chunks)
+    return result
 
 
 
@@ -82,5 +84,5 @@ user_question = st.text_input("Enter your question:")
 
 if user_question:
     answers = answer_question(user_question)
-    st.markdown("### Answers")
+    # st.markdown("### Answers")
     st.write(f"**Answer:** {answers['answer']} (Score: {answers['score']:.2f})")
