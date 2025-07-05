@@ -1,5 +1,5 @@
 # Pulpnet-ACA-
-This is a Transformer-based chatbot designed to answer user questions based on data scraped from the IIT Kanpur website. It uses state-of-the-art NLP models to extract accurate answers from academic and institutional content, offering a smooth interface through Streamlit.
+This is a Transformer-based chatbot designed to answer user questions based on data scraped from the IIT Kanpur website. It uses NLP models to extract accurate answers from the content, offering a smooth interface through Streamlit.
 
 
 ***Workflow Overview***

@@ -4,7 +4,8 @@ import numpy as np
 import nltk
 from nltk.tokenize import sent_tokenize
 import faiss
-from transformers import pipeline
+from utils import qa_pipeline
+from sentence_transformers import SentenceTransformer
 
 df = pd.read_csv("./final_project/iitk_departments_cleaned.csv")
 nltk.download('punkt_tab')
@@ -28,13 +29,9 @@ for i, row in df.iterrows():
     sentence_chunks = chunk_by_sentences(desc, chunk_size=3, overlap=1)
     all_chunks.extend(sentence_chunks)
 
-
-from sentence_transformers import SentenceTransformer
-
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
+embedder = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
 
 corpus_embeddings = embedder.encode(all_chunks, convert_to_tensor=True)
-
 
 corpus_embeddings_np = corpus_embeddings.cpu().detach().numpy()
 
@@ -48,7 +45,6 @@ def get_top_k_chunks(question, k=3):
     D, I = index.search(np.array(question_embedding), k)
     return [all_chunks[i] for i in I[0]]
 
-qa_pipeline = pipeline("question-answering", model="deepset/roberta-base-squad2")
 
 def answer_question(question):
     context_chunks = get_top_k_chunks(question, k=3)
