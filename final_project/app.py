@@ -10,7 +10,6 @@ from sentence_transformers import SentenceTransformer
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("./final_project/iitk_cleaned_data.csv")
-    df = df[0:1]
     
     df = df.dropna(subset=["description"])  
     df.reset_index(drop=True, inplace=True)
@@ -70,6 +69,7 @@ def answer_question(question):
     #     answers.append(result)
     # return answers
     result = model(question=question, context=context_chunks)
+    print(context_chunks)
     return result
 
 
