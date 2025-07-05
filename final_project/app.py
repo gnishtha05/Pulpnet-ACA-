@@ -63,7 +63,7 @@ def get_top_chunks(question):
 
 
 def answer_question(question):
-    context_chunks = get_top_chunks(question,k=3)
+    context_chunks = get_top_chunks(question)
     answers = []
     for context in context_chunks:
         result = model(question=question, context=context)
