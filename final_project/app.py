@@ -15,7 +15,7 @@ def load_and_process_data():
     df = df.dropna(subset=["description"])  
     df.reset_index(drop=True, inplace=True)
 
-    def chunk_by_sentences(text, chunk_size=30, overlap=1):
+    def chunk_by_sentences(text, chunk_size=5, overlap=1):
         sentences = sent_tokenize(text)
         chunks = []
         for i in range(0, len(sentences), chunk_size - overlap):
@@ -28,7 +28,7 @@ def load_and_process_data():
     all_chunks = []
     for i, row in df.iterrows():
         desc = row['description']
-        sentence_chunks = chunk_by_sentences(desc, chunk_size=30, overlap=1)
+        sentence_chunks = chunk_by_sentences(desc, chunk_size=5, overlap=1)
         all_chunks.extend(sentence_chunks)
     
     return all_chunks
@@ -54,8 +54,21 @@ embedder, index = initialize_resources(all_chunks)
 def get_top_k_chunks(question, k=3):
     question_embedding = embedder.encode([question])
     D, I = index.search(np.array(question_embedding), k)
-    return [all_chunks[i] for i in I[0]]
+    matched_chunks = [all_chunks[i] for i in I[0]]
 
+    extended_chunks = []
+    for idx in I[0]:
+        extended_chunks.append(all_chunks[idx])
+        if idx + 1 < len(all_chunks):
+            extended_chunks.append(all_chunks[idx + 1])
+        if idx+2 < len(all_chunks):
+            extended_chunks.append(all_chunks[idx + 2])
+        if idx - 1 >= 0:
+            extended_chunks.append(all_chunks[idx - 1])
+        if idx - 2 >= 0:
+            extended_chunks.append(all_chunks[idx - 2])
+        
+    return list(set(extended_chunks)) 
 
 def answer_question(question):
     context_chunks = get_top_k_chunks(question, k=3)
