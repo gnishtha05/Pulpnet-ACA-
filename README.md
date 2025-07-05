@@ -19,7 +19,7 @@ You can either:
 
 **Model Selection**
 
-We use a pre trained model RoBERTa from Hugging Face's Transformes library 
+We use a pre trained model RoBERTa from Hugging Face's Transformers library 
 
 **Streamlit Deployment**
 
