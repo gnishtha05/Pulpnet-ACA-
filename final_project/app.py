@@ -35,7 +35,7 @@ def load_and_process_data():
 
 @st.cache_resource
 def initialize_resources(all_chunks):
-    embedder = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+    embedder = SentenceTransformer('multi-qa-mpnet-base-dot-v1', device='cpu')
     corpus_embeddings = embedder.encode(all_chunks, convert_to_tensor=True)
     corpus_embeddings_np = corpus_embeddings.cpu().detach().numpy()
 
