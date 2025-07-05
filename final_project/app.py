@@ -4,8 +4,9 @@ import numpy as np
 import nltk
 from nltk.tokenize import sent_tokenize
 import faiss
-from utils import qa_pipeline
+from utils import model
 from sentence_transformers import SentenceTransformer
+
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("./final_project/iitk_cleaned_data.csv")
@@ -60,7 +61,7 @@ def answer_question(question):
     context_chunks = get_top_k_chunks(question, k=3)
     answers = []
     for context in context_chunks:
-        result = qa_pipeline(question=question, context=context)
+        result = model(question=question, context=context)
         answers.append(result)
     return answers
 
