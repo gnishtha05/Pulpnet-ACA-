@@ -10,6 +10,7 @@ from sentence_transformers import SentenceTransformer
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("./final_project/iitk_cleaned_data.csv")
+    nltk.download('punkt_tab')
     
     df = df.dropna(subset=["description"])  
     df.reset_index(drop=True, inplace=True)
