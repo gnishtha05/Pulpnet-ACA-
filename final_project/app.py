@@ -85,8 +85,9 @@ st.markdown("Ask me anything about IIT Kanpur academic departments!")
 user_question = st.text_input("Enter your question:")
 
 if user_question:
-    answers, context = answer_question(user_question)
+    answer, context = answer_question(user_question)
      
     # st.markdown("### Answers")
-    st.write(context)
-    st.write(f"**Answer:** {answers['answer']} (Score: {answers['score']:.2f})")
+    
+    st.write(f"**Answer:** {answer}")
+    st.caption(f"**Context Used:** {context}")
