@@ -88,5 +88,6 @@ if user_question:
     answer, context = answer_question(user_question)
      
     # st.markdown("### Answers")
-    st.write(context)
+    
     st.write(f"**Answer:** {answer}")
+    st.caption(f"**Context Used:** {context}")
