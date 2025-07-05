@@ -68,9 +68,10 @@ def answer_question(question):
     #     result = model(question=question, context=context)
     #     answers.append(result)
     # return answers
-    result = model(question=question, context=context_chunks)
-
-    return result , context_chunks
+    prompt  = "Answer the question : " + user_question + " using the context: " + context_chunks
+    result = model(prompt, context=context_chunks)
+    generated_text = result[0]['generated_text']
+    return generated_text , context_chunks
 
 
 
@@ -84,6 +85,7 @@ user_question = st.text_input("Enter your question:")
 
 if user_question:
     answers, context = answer_question(user_question)
+     
     # st.markdown("### Answers")
     st.write(context)
     st.write(f"**Answer:** {answers['answer']} (Score: {answers['score']:.2f})")
