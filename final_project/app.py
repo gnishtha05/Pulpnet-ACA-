@@ -53,7 +53,7 @@ embedder, index = initialize_resources(all_chunks)
 
 def get_top_chunks(question):
     question_embedding = embedder.encode([question])
-    D, I = index.search(np.array(question_embedding))
+    D, I = index.search(np.array(question_embedding), k=3 )
     best_idx = I[0][0]
     start_idx = max(best_idx - 2, 0)
     end_idx = min(best_idx + 3, len(all_chunks))
@@ -63,7 +63,7 @@ def get_top_chunks(question):
 
 
 def answer_question(question):
-    context_chunks = get_top_chunks(question)
+    context_chunks = get_top_chunks(question,k=3)
     answers = []
     for context in context_chunks:
         result = model(question=question, context=context)
