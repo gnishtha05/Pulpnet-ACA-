@@ -51,27 +51,19 @@ all_chunks = load_and_process_data()
 embedder, index = initialize_resources(all_chunks)
 
 
-def get_top_k_chunks(question, k=3):
+def get_top_chunks(question):
     question_embedding = embedder.encode([question])
-    D, I = index.search(np.array(question_embedding), k)
-    matched_chunks = [all_chunks[i] for i in I[0]]
+    D, I = index.search(np.array(question_embedding))
+    best_idx = I[0][0]
+    start_idx = max(best_idx - 2, 0)
+    end_idx = min(best_idx + 3, len(all_chunks))
 
-    extended_chunks = []
-    for idx in I[0]:
-        extended_chunks.append(all_chunks[idx])
-        if idx + 1 < len(all_chunks):
-            extended_chunks.append(all_chunks[idx + 1])
-        if idx+2 < len(all_chunks):
-            extended_chunks.append(all_chunks[idx + 2])
-        if idx - 1 >= 0:
-            extended_chunks.append(all_chunks[idx - 1])
-        if idx - 2 >= 0:
-            extended_chunks.append(all_chunks[idx - 2])
-        
-    return list(set(extended_chunks)) 
+    context = " ".join(all_chunks[start_idx:end_idx])
+    return context
+
 
 def answer_question(question):
-    context_chunks = get_top_k_chunks(question, k=3)
+    context_chunks = get_top_chunks(question)
     answers = []
     for context in context_chunks:
         result = model(question=question, context=context)
@@ -91,5 +83,4 @@ user_question = st.text_input("Enter your question:")
 if user_question:
     answers = answer_question(user_question)
     st.markdown("### Answers")
-    for i, ans in enumerate(answers):
-        st.write(f"**[Context {i+1}]** {ans['answer']} (Score: {ans['score']:.2f})")
+    st.write(f"**Answer:** {answers['answer']} (Score: {answers['score']:.2f})")
