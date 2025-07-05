@@ -14,7 +14,7 @@ def preprocess_data():
     # Optional cleaning
     df = df.dropna(subset=["description"])  # if you have a 'description' column
     df.reset_index(drop=True, inplace=True)
-    def chunk_by_sentences(text, chunk_size=3, overlap=1):
+    def chunk_by_sentences(text, chunk_size=30, overlap=1):
         sentences = sent_tokenize(text)
         chunks = []
         for i in range(0, len(sentences), chunk_size - overlap):
