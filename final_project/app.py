@@ -7,19 +7,19 @@ import faiss
 from utils import qa_pipeline
 from sentence_transformers import SentenceTransformer
 @st.cache_data
-def preprocess_data():
+def load_and_process_data():
     df = pd.read_csv("./final_project/iitk_cleaned_data.csv")
     nltk.download('punkt_tab')
-
-    # Optional cleaning
-    df = df.dropna(subset=["description"])  # if you have a 'description' column
+    
+    df = df.dropna(subset=["description"])  
     df.reset_index(drop=True, inplace=True)
+
     def chunk_by_sentences(text, chunk_size=30, overlap=1):
         sentences = sent_tokenize(text)
         chunks = []
         for i in range(0, len(sentences), chunk_size - overlap):
             chunk = " ".join(sentences[i:i + chunk_size])
-            if len(chunk.split()) > 10:  # filter out tiny chunks
+            if len(chunk.split()) > 10:  
                 chunks.append(chunk)
         return chunks
 
@@ -27,23 +27,28 @@ def preprocess_data():
     all_chunks = []
     for i, row in df.iterrows():
         desc = row['description']
-        sentence_chunks = chunk_by_sentences(desc, chunk_size=3, overlap=1)
+        sentence_chunks = chunk_by_sentences(desc, chunk_size=30, overlap=1)
         all_chunks.extend(sentence_chunks)
+    
+    return all_chunks
 
+@st.cache_resource
+def initialize_resources(all_chunks):
     embedder = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
-
     corpus_embeddings = embedder.encode(all_chunks, convert_to_tensor=True)
-
     corpus_embeddings_np = corpus_embeddings.cpu().detach().numpy()
 
     # Build FAISS index
     dimension = corpus_embeddings_np.shape[1]
     index = faiss.IndexFlatL2(dimension)
     index.add(corpus_embeddings_np)
-    return all_chunks, embedder, index
+
+    return embedder, index
 
 # Cache the preprocessing step
-all_chunks, embedder, index = preprocess_data()
+all_chunks = load_and_process_data()
+embedder, index = initialize_resources(all_chunks)
+
 
 def get_top_k_chunks(question, k=3):
     question_embedding = embedder.encode([question])
@@ -63,7 +68,7 @@ def answer_question(question):
 
 st.set_page_config(page_title="IITK QA Chatbot", page_icon="🤖")
 
-st.title("🤖 IITK QA Chatbot")
+st.title("IITK QA Chatbot")
 st.markdown("Ask me anything about IIT Kanpur academic departments!")
 
 # Text input box
