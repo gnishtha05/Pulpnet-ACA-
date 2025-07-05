@@ -69,8 +69,8 @@ def answer_question(question):
     #     answers.append(result)
     # return answers
     result = model(question=question, context=context_chunks)
-    print(context_chunks)
-    return result
+
+    return result , context_chunks
 
 
 
@@ -83,6 +83,7 @@ st.markdown("Ask me anything about IIT Kanpur academic departments!")
 user_question = st.text_input("Enter your question:")
 
 if user_question:
-    answers = answer_question(user_question)
+    answers, context = answer_question(user_question)
     # st.markdown("### Answers")
+    st.write(context)
     st.write(f"**Answer:** {answers['answer']} (Score: {answers['score']:.2f})")
