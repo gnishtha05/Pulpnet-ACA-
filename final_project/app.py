@@ -8,7 +8,7 @@ from utils import qa_pipeline
 from sentence_transformers import SentenceTransformer
 @st.cache_data
 def preprocess_data():
-    df = pd.read_csv("./final_project/iitk_departments_cleaned.csv")
+    df = pd.read_csv("./final_project/iitk_cleaned_data.csv")
     nltk.download('punkt_tab')
 
     # Optional cleaning
