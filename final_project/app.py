@@ -69,7 +69,7 @@ def answer_question(question):
     #     answers.append(result)
     # return answers
     prompt  = "Answer the question : " + user_question + " using the context: " + context_chunks
-    result = model(prompt, context=context_chunks)
+    result = model(prompt)
     generated_text = result[0]['generated_text']
     return generated_text , context_chunks
 
