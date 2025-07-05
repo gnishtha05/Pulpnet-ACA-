@@ -1,7 +1,7 @@
 # Pulpnet-ACA-
 A Transformer-based chatbot designed to answer user queries using data scraped from the IIT Kanpur academic website. The model leverages a pre-trained RoBERTa transformer for extractive QA and offers a smooth, user-friendly interface built with Streamlit.
 
-*Access the app at*: https://nishtha-pulpnet.streamlit.app/
+*Access the app at*: https://nishtha-pulpnet-project.streamlit.app/
 
 ***Workflow Overview***
 1. **Web Scraping** – Extracts textual data from IIT Kanpur's official web pages      
@@ -42,7 +42,7 @@ We use a pre trained model FLAN-T5 base from Hugging Face's Transformers library
     streamlit run final_project/app.py
     ```
 
-*Hosted link*: https://nishtha-pulpnet.streamlit.app/
+*Hosted link*: https://nishtha-pulpnet-project.streamlit.app/
 
 
 
