@@ -4,7 +4,7 @@ import numpy as np
 import nltk
 from nltk.tokenize import sent_tokenize
 import faiss
-from utils import model
+from utils import model, tokenizer
 from sentence_transformers import SentenceTransformer
 
 @st.cache_data
@@ -70,7 +70,9 @@ def answer_question(question):
     #     answers.append(result)
     # return answers
     prompt  = "Answer the question : " + user_question + " using the context: " + context_chunks
-    result = model(prompt)
+    input_ids = tokenizer(prompt, truncation=True, max_length=512, return_tensors="pt")["input_ids"]
+    prompt = tokenizer.decode(input_ids[0], skip_special_tokens=True)
+    result = model(prompt, truncation = True, max_new_tokens=512, num_return_sequences=1)
     generated_text = result[0]['generated_text']
     return generated_text , context_chunks
 
